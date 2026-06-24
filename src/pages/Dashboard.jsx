@@ -6,6 +6,7 @@ import "../App.css";
 function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
+ const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -21,6 +22,24 @@ const handleLogout = () => {
   localStorage.removeItem("loggedUser");
   navigate("/");
 };
+const courses = [
+  "Daily Practices Drawing",
+  "The Power",
+  "Expressive",
+  "Lunacy Design Class",
+  "Digital Art for Prime",
+  "Drawing Basics",
+  "Creative Sketching",
+  "Digital Illustration",
+  "Adobe Illustrator Training",
+  "Hand-Painted Textbars",
+  "Create a Bold Album Cover",
+  "How to Use Procreate 5x"
+];
+
+const filteredCourses = courses.filter((course) =>
+  course.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <div className="dashboard">
@@ -52,7 +71,28 @@ const handleLogout = () => {
 
       <div className="main">  
 
- <input type="text" placeholder=" 🔍 Search anything..." className="search-input" />
+    <input
+      type="text"
+      placeholder="🔍 Search anything..."
+      className="search-input"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+    {searchTerm && (
+      <div className="search-results">
+        <h3>Search Results</h3>
+
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
+            <div key={index} className="search-item">
+              {course}
+            </div>
+          ))
+        ) : (
+          <p>No results found</p>
+        )}
+      </div>
+    )}
 
         <input placeholder="coding" className="code" />
         <input placeholder="Design" className="code" />
