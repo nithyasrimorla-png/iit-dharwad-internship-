@@ -670,3 +670,6 @@ content: normal;
   font-size: 13px;
   color: #888;
 }
+.over {
+  cursor: pointer;
+}

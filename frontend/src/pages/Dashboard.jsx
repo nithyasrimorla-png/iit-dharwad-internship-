@@ -39,8 +39,8 @@ const handleLogout = () => {
   navigate("/");
 };
 
-const filteredCourses = courses.filter((course) =>
-  course.title.toLowerCase().includes(searchTerm.toLowerCase())
+const filteredCourses = (courses || []).filter((course) =>
+  course?.title?.toLowerCase().includes(searchTerm.toLowerCase().trim())
 );
 
   return (
@@ -49,7 +49,9 @@ const filteredCourses = courses.filter((course) =>
       <div className="sidebar">
         <h1 className="h1">Retro.</h1>
         <ul>
-          <li className="over">🏠Overview</li>
+          <li className="over" onClick={() => navigate("/dashboard")}>
+            🏠Overview
+          </li>
           <li
               className="cor"
               onClick={() => navigate("/chapters")}
@@ -96,26 +98,27 @@ const filteredCourses = courses.filter((course) =>
     </div>
     <input
       type="text"
-      placeholder="🔍 Search anything..."
+      placeholder= "  🔍 Search anything..."
       className="search-input"
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
     />
-    {searchTerm && (
-      <div className="search-results">
-        <h3>Search Results</h3>
+{searchTerm && (
+  <div className="search-results">
+    <h3>Search Results</h3>
 
-        {filteredCourses.length > 0 ? (
-       filteredCourses.map((course) => (
-  <div key={course._id} className="search-item">
-    {course.title}
-  </div>
-))
-        ) : (
-          <p>No results found</p>
-        )}
-      </div>
+    {filteredCourses.length > 0 ? (
+      filteredCourses.map((course) => (
+        <div key={course._id} className="search-item">
+          <img src={course.image} alt="" width="40" />
+          <span>{course.title}</span>
+        </div>
+      ))
+    ) : (
+      <p>No results found</p>
     )}
+  </div>
+)}
 
         <input placeholder="coding" className="code" />
         <input placeholder="Design" className="code" />

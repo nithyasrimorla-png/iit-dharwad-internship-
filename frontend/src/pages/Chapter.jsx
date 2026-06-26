@@ -171,7 +171,9 @@ const exercise = Math.min(exerciseCount * 10, 100);
         <h1 className="h1">Retro.</h1>
 
         <ul>
-          <li className="over">🏠Overview</li>
+          <li className="over" onClick={() => navigate("/dashboard")}>
+            🏠Overview
+          </li>
           <li className="cor" onClick={() => navigate("/chapters")}>📚 Chapters</li>
           <li className="cor">🗓️ Schedule</li>
           <li className="cor">❤️ Wishlist</li>
