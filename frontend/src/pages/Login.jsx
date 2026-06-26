@@ -24,7 +24,7 @@ const handleLogin = async (e) => {
     localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
     localStorage.setItem("token", res.data.token);
 
-    navigate("/dashboard");
+    navigate("/setup");
 
   } catch (err) {
     alert(err.response?.data?.message || "Login failed");

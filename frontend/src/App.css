@@ -673,3 +673,61 @@ content: normal;
 .over {
   cursor: pointer;
 }
+.setup-page {
+  min-height: 100vh;
+  background: #f8f3ea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.setup-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+
+
+.setup-form {
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.setup-form label {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.setup-form select {
+  padding: 12px;
+  border: 2px solid black;
+  border-radius: 12px;
+  background: white;
+
+  border-bottom: 3px solid black;
+  border-right: 5px solid black;
+
+  font-weight: bold;
+}
+
+.setup-btn {
+  margin-top: 15px;
+  padding: 12px;
+  background: palevioletred;
+  border: 2px solid black;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+
+  border-bottom: 3px solid black;
+  border-right: 5px solid black;
+}
+
+.setup-btn:hover {
+  transform: translateY(-3px);
+}
