@@ -298,7 +298,7 @@ const exercise = Math.min(exerciseCount * 10, 100);
         {progress[lastChapter] || 0}% Completed
       </span>
 
-      <button onClick={() => openChapter(lastChapter)}>
+ <button onClick={() => window.location.href = "https://ema.iitdh.ac.in/ebuddy/"}>
   Continue Learning
 </button>
     </div> 

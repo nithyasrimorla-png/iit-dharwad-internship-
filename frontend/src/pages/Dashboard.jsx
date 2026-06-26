@@ -2,11 +2,27 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../App.css";
-
+import API from "../api";
 function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
  const [searchTerm, setSearchTerm] = useState("");
+const [courses, setCourses] = useState([]);
+
+
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      const res = await API.get("/courses");
+      setCourses(res.data);
+    } catch (err) {
+      console.log("Error fetching courses", err);
+    }
+  };
+
+  fetchCourses();
+}, []);
+
 
     useEffect(() => {
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -22,23 +38,9 @@ const handleLogout = () => {
   localStorage.removeItem("loggedUser");
   navigate("/");
 };
-const courses = [
-  "Daily Practices Drawing",
-  "The Power",
-  "Expressive",
-  "Lunacy Design Class",
-  "Digital Art for Prime",
-  "Drawing Basics",
-  "Creative Sketching",
-  "Digital Illustration",
-  "Adobe Illustrator Training",
-  "Hand-Painted Textbars",
-  "Create a Bold Album Cover",
-  "How to Use Procreate 5x"
-];
 
 const filteredCourses = courses.filter((course) =>
-  course.toLowerCase().includes(searchTerm.toLowerCase())
+  course.title.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
   return (
@@ -70,7 +72,28 @@ const filteredCourses = courses.filter((course) =>
       </div>
 
       <div className="main">  
+  <div className="container">
+  {courses.map((course) => (
+    <div className="feat" key={course._id}>
+      
+      <span className="featu">
+        {course.featured ? "Featured" : "New"}
+      </span>
 
+      <img
+        src={course.image}
+        alt={course.title}
+        className="card-i"
+      />
+
+      <div className="daily">
+        {course.title}
+      </div>
+
+    </div>
+  ))}
+
+    </div>
     <input
       type="text"
       placeholder="🔍 Search anything..."
@@ -83,11 +106,11 @@ const filteredCourses = courses.filter((course) =>
         <h3>Search Results</h3>
 
         {filteredCourses.length > 0 ? (
-          filteredCourses.map((course, index) => (
-            <div key={index} className="search-item">
-              {course}
-            </div>
-          ))
+       filteredCourses.map((course) => (
+  <div key={course._id} className="search-item">
+    {course.title}
+  </div>
+))
         ) : (
           <p>No results found</p>
         )}
@@ -111,12 +134,12 @@ const filteredCourses = courses.filter((course) =>
    <div className="feat">
             <span className="featu">New</span>
             <img src="/images/exp.jpg" alt="exp" className="card-i"/>
-            <div className="power">The Power</div>
+            <div className="power">The Power of Procreate </div>
           </div>
 
      <div className="feat">
             <img src="/images/N.jpg" alt="N" className="card-i" />
-            <div className="Expressive">Expressive</div>
+            <div className="Expressive">Expressive Sketching</div>
           </div>
 
         </div>
