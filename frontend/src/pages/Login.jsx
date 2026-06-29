@@ -8,7 +8,8 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 console.log("LOGIN CLICKED");
 const handleLogin = async (e) => {
   e.preventDefault();
@@ -19,23 +20,33 @@ const handleLogin = async (e) => {
       password,
     });
 
-    alert("Login successful 🚀");
-
     localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
     localStorage.setItem("token", res.data.token);
 
-    navigate("/setup");
+    setMessage("Login Successful!");
+    setMessageType("success");
+
+    setTimeout(() => {
+      navigate("/setup");
+    }, 1500);
 
   } catch (err) {
-    alert(err.response?.data?.message || "Login failed");
+    setMessage(err.response?.data?.message || "Login failed");
+    setMessageType("error");
   }
 };
 
   return (
+
+  
     <div className="auth-page">
       <div className="auth-card">
         <h1>Login</h1>
-
+     {message && (
+  <div className={`auth-message ${messageType}`}>
+    {message}
+  </div>
+)}
         <form onSubmit={handleLogin}>
           <input
             className="auth-input"

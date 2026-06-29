@@ -18,6 +18,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      completedChapters: []   // ✅ IMPORTANT ADD THIS
     });
 
     res.status(201).json({
@@ -39,24 +40,35 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
+const isMatch = await bcrypt.compare(password, user.password);
 
-    const isMatch = await bcrypt.compare(password, user.password);
+if (!isMatch) {
+  return res.status(400).json({ message: "Invalid password" });
+}
 
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
+const today = new Date().toDateString();
 
-    const token = jwt.sign(
-      { id: user._id },
-      "secretkey",
-      { expiresIn: "1d" }
-    );
+if (!user.lastLogin) {
+  user.streak = 1;
+} else if (user.lastLogin !== today) {
+  user.streak += 1;
+}
 
-    res.json({
-      message: "Login successful",
-      token,
-      user,
-    });
+user.lastLogin = today;
+
+await user.save();
+
+const token = jwt.sign(
+  { id: user._id },
+  "secretkey",
+  { expiresIn: "1d" }
+);
+
+res.json({
+  message: "Login successful",
+  token,
+  user,
+});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

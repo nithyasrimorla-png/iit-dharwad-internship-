@@ -8,12 +8,18 @@ function Dashboard() {
   const [userName, setUserName] = useState("");
  const [searchTerm, setSearchTerm] = useState("");
 const [courses, setCourses] = useState([]);
-
+const setup = JSON.parse(localStorage.getItem("userSetup"));
+const selectedClass = setup?.className;
 
 useEffect(() => {
   const fetchCourses = async () => {
     try {
-      const res = await API.get("/courses");
+      const setup = JSON.parse(localStorage.getItem("userSetup"));
+
+      const res = await API.get(
+        `/courses?class=${setup.className}`
+      );
+
       setCourses(res.data);
     } catch (err) {
       console.log("Error fetching courses", err);
@@ -22,7 +28,6 @@ useEffect(() => {
 
   fetchCourses();
 }, []);
-
 
     useEffect(() => {
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -73,29 +78,7 @@ const filteredCourses = (courses || []).filter((course) =>
         </div>
       </div>
 
-      <div className="main">  
-  <div className="container">
-  {courses.map((course) => (
-    <div className="feat" key={course._id}>
-      
-      <span className="featu">
-        {course.featured ? "Featured" : "New"}
-      </span>
-
-      <img
-        src={course.image}
-        alt={course.title}
-        className="card-i"
-      />
-
-      <div className="daily">
-        {course.title}
-      </div>
-
-    </div>
-  ))}
-
-    </div>
+     <div className="main"> 
     <input
       type="text"
       placeholder= "  🔍 Search anything..."
@@ -124,54 +107,51 @@ const filteredCourses = (courses || []).filter((course) =>
         <input placeholder="Design" className="code" />
         <input placeholder="Marketing" className="code" />
         <input placeholder="Accounting" className="code" />
-   <div className="search">
-        <h3>Recent Searches</h3>
-        <div className="container">
+<div className="search">
+  <h3>{selectedClass} Subjects</h3>
 
-          <div className="feat">
-            <span className="featu">Featured</span>
-            <img src="/images/draw.jpg" alt="draw" className="card-i"/>
-            <div className="daily">Daily Practices Drawing</div>
-          </div>
+  <div className="container">
+    {courses.map((course) => (
+      <div className="feat" key={course._id}>
+        <span className="featu">
+          {course.featured ? "Featured" : "Subject"}
+        </span>
 
-   <div className="feat">
-            <span className="featu">New</span>
-            <img src="/images/exp.jpg" alt="exp" className="card-i"/>
-            <div className="power">The Power of Procreate </div>
-          </div>
+        <img
+          src={course.image}
+          alt={course.title}
+          className="card-i"
+        />
 
-     <div className="feat">
-            <img src="/images/N.jpg" alt="N" className="card-i" />
-            <div className="Expressive">Expressive Sketching</div>
-          </div>
-
+        <div className="daily">
+          {course.title}
         </div>
       </div>
+    ))}
+  </div>
+</div>
         
       
 
         <div className="search">
         <h3>Popular Class</h3>
+<div className="popular-cards">
+  {courses.slice(0,2).map((course)=>(
+    <div className="lunacy" key={course._id}>
+      <span className="badge">Subject</span>
 
-        <div className="popular-cards">
-          <div className="lunacy">
-            <input className="badge" placeholder="Featured" />
-             <img src="/images/lunacy.jpg" alt="Lunacy" className="card-img"/>
-            <div className="card-body">
-              <p>Lunacy Design Class</p>
-            </div>
-          </div>
+      <img
+        src={course.image}
+        alt={course.title}
+        className="card-img"
+      />
 
-          <div className="Digital">
-            <input className="badge" placeholder="Featured" />
-             <img src="/images/ill.jpg" alt="ill" className="card-img" />
-
-            <div className="card-body">
-              <p>Digital Art for Prime</p>
-            </div>
-          </div>
-        </div>
+      <div className="card-body">
+        <p>{course.title}</p>
       </div>
+    </div>
+  ))}
+</div>
 
     
         <div className="search">
@@ -179,30 +159,26 @@ const filteredCourses = (courses || []).filter((course) =>
 
           <div className="container">
 
-            <div className="draw">
-              
-              <input className="feature" placeholder="New" />
-              <img src="/images/pic.jpg" alt="Drawing Basics" className="card-im" />
-              <div className="card-foot">
-                <p>Drawing Basics</p>
-              </div>
-            </div>
+        
+      <div className="container">
+  {courses.map((course)=>(
+    <div className="draw" key={course._id}>
 
-            <div className="draw">
-              
-              <input className="feature" placeholder="New" />
-              <img src="/images/S.jpg" alt="Creative Sketching" className="card-im" />
-              <div className="card-foot">
-                <p>Creative Sketching</p>
-              </div>
-            </div>
+      <span className="feature">Subject</span>
 
-            <div className="draw">
-              <input className="feature" placeholder="New" />
-              <img src="/images/book.jpg" alt="Drawing ilustration" className="card-im" />
-              <div className="card-foot">
-                <p>Digital Illustration</p>
-              </div>
+      <img
+        src={course.image}
+        alt={course.title}
+        className="card-im"
+      />
+
+      <div className="card-foot">
+        <p>{course.title}</p>
+      </div>
+
+    </div>
+  ))}
+</div>
             </div>
           </div>
         </div>

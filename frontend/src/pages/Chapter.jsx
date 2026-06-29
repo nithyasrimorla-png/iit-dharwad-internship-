@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import "./chapter.css";
+import API from "../api";
 
 import {
   Chart as ChartJS,
@@ -28,8 +29,11 @@ import "react-circular-progressbar/dist/styles.css";
 function Chapter() {
   const navigate = useNavigate();
 
-  const openChapter = (chapterId) => {
-  localStorage.setItem("lastChapter", chapterId);
+const [lastChapter, setLastChapter] = useState(1);
+const [exerciseCount, setExerciseCount] = useState(0);
+
+const openChapter = (chapterId) => {
+  handleChapterWatch(chapterId);
   navigate(`/chapter/${chapterId}`);
 };
 
@@ -79,61 +83,96 @@ function Chapter() {
       console.log(data);
     });
 }, []);
-
+ 
+const [completedChapters, setCompletedChapters] = useState([]);
 
 useEffect(() => {
-  const lastLogin = localStorage.getItem("lastLogin");
-  const today = new Date().toDateString();
+  const fetchCompletedChapters = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("loggedUser"));
 
-  let storedStreak = Number(localStorage.getItem("streak")) || 0;
+      const res = await API.get(`/progress/${user._id}`);
 
-  if (!lastLogin) {
-    storedStreak = 1;
-  } else if (lastLogin !== today) {
-    storedStreak += 1;
+      setCompletedChapters(res.data.completedChapters);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchCompletedChapters();
+}, []);
+
+
+const completeChapter = async (chapterId) => {
+  try {
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+    const res = await API.post("/progress/complete", {
+      userId: user._id,
+      chapterId,
+    });
+
+    setCompletedChapters(res.data.completedChapters);
+
+  } catch (err) {
+    console.log(err);
   }
+};
 
-  localStorage.setItem("streak", storedStreak);
-  localStorage.setItem("lastLogin", today);
+useEffect(() => {
+  const fetchDashboard = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("loggedUser"));
 
-  setStreak(storedStreak);
+      const res = await API.get(`/progress/dashboard/${user._id}`);
+
+      setProgress(res.data.progress);
+      setWeeklyData(res.data.weeklyData);
+      setStreak(res.data.streak);
+      setCompletedChapters(res.data.completedChapters);
+      setLastChapter(res.data.lastChapter);
+      setExerciseCount(res.data.exerciseCount);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchDashboard();
 }, []);
   
-  useEffect(() => {
-    const savedWeekly = JSON.parse(localStorage.getItem("weeklyData") || "{}");
-    const savedProgress = JSON.parse(localStorage.getItem("progress") || "{}");
+const handleChapterWatch = async (chapterId) => {
+  const today = getToday();
 
-    setWeeklyData((prev) => ({ ...prev, ...savedWeekly }));
-    setProgress((prev) => ({ ...prev, ...savedProgress }));
-  }, []);
-
-  
-  const handleChapterWatch = (chapterId) => {
-    const today = getToday();
-
-    // update weekly graph
-    setWeeklyData((prev) => {
-      const updated = {
-        ...prev,
-        [today]: Math.min(100, (prev[today] || 0) + 10)
-      };
-      localStorage.setItem("weeklyData", JSON.stringify(updated));
-      return updated;
-    });
-
-    // update chapter progress
-    setProgress((prev) => {
-      const updated = {
-        ...prev,
-        [chapterId]: Math.min(100, (prev[chapterId] || 0) + 20)
-      };
-      localStorage.setItem("progress", JSON.stringify(updated));
-      return updated;
-    });
-
-    
-    localStorage.setItem("lastChapter", chapterId);
+  const updatedWeekly = {
+    ...weeklyData,
+    [today]: Math.min(100, (weeklyData[today] || 0) + 10),
   };
+
+  const updatedProgress = {
+    ...progress,
+    [chapterId]: Math.min(100, (progress[chapterId] || 0) + 20),
+  };
+
+  setWeeklyData(updatedWeekly);
+  setProgress(updatedProgress);
+  setLastChapter(chapterId);
+  
+  try {
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+    await API.post("/progress/saveProgress", {
+      userId: user._id,
+      progress: updatedProgress,
+      weeklyData: updatedWeekly,
+      lastChapter: chapterId,
+      exerciseCount,
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 
   const graphData = {
@@ -146,7 +185,7 @@ useEffect(() => {
       }
     ]
   };
-const lastChapter = localStorage.getItem("lastChapter") || 1;
+
 
 const mastery =
   Math.round(
@@ -154,12 +193,9 @@ const mastery =
       Object.keys(progress).length
   );
 
-// confidence based on streak
+
 const confidence = Math.min(streak * 10, 100);
 
-// exercises completed
-const exerciseCount =
-  Number(localStorage.getItem("exerciseCount")) || 0;
 
 const exercise = Math.min(exerciseCount * 10, 100);
 
@@ -197,32 +233,80 @@ const exercise = Math.min(exerciseCount * 10, 100);
         <img src="/images/top-banner.jpg" className="chapter-top-image" />
         <div className="map-section">
   <img src="/images/Map.jpg" alt="Map" className="map-image" />
+<div className="chapter-node">
   <button
     className="map-btn map-btn1"
     onClick={() => openChapter(1)}
   />
+
+  {completedChapters.includes(1) && (
+    <div className="completed-badge">
+      ✓
+    </div>
+  )}
+
+</div>
+ <div className="chapter-node">
 
   <button
     className="map-btn map-btn2"
     onClick={() => openChapter(2)}
   />
 
+  {completedChapters.includes(2) && (
+    <div className="completed-badge">
+      ✓
+    </div>
+  )}
+
+</div>
+
+ <div className="chapter-node">
+
   <button
     className="map-btn map-btn3"
     onClick={() => openChapter(3)}
   />
+
+  {completedChapters.includes(3) && (
+    <div className="completed-badge">
+      ✓
+    </div>
+  )}
+
+</div>
+
+ <div className="chapter-node">
 
   <button
     className="map-btn map-btn4"
     onClick={() => openChapter(4)}
   />
 
+  {completedChapters.includes(4) && (
+    <div className="completed-badge">
+      ✓
+    </div>
+  )}
+
+</div>
+
+<div className="chapter-node">
+
   <button
     className="map-btn map-btn5"
     onClick={() => openChapter(5)}
   />
 
-</div>
+  {completedChapters.includes(5) && (
+    <div className="completed-badge">
+      ✓
+    </div>
+  )}
+  </div>
+  </div>
+
+  
 
         <div className="banner-text">
           Continue where you left off.
@@ -267,7 +351,7 @@ const exercise = Math.min(exerciseCount * 10, 100);
     <p>Exercise</p>
   </div>
 
-</div>
+   </div>
       
         <button
           className="start-btn"

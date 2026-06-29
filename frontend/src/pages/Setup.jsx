@@ -38,8 +38,8 @@ function Setup() {
 
       <div className="setup-form">
 
-        {/* CLASS */}
-        <label>🎒 Which class are you studying in?</label>
+  
+        <label> Which class are you studying in?</label>
         <select name="className" onChange={handleChange}>
           <option value="">Select Class</option>
           <option>Class 1</option>
@@ -54,8 +54,8 @@ function Setup() {
           <option>Class 10</option>
         </select>
 
-        {/* SUBJECT */}
-        <label>📚 Your favorite subject?</label>
+      
+        <label> Your favorite subject?</label>
         <select name="subject" onChange={handleChange}>
           <option value="">Select Subject</option>
           <option>Maths</option>
@@ -67,8 +67,8 @@ function Setup() {
           <option>Hindi</option>
         </select>
 
-        {/* LEARNING STYLE */}
-        <label>🧠 How do you like learning?</label>
+      
+        <label> How do you like learning?</label>
         <select name="learningStyle" onChange={handleChange}>
           <option value="">Select Option</option>
           <option>Watching Videos</option>
@@ -77,8 +77,8 @@ function Setup() {
           <option>Drawing & Visual Learning</option>
         </select>
 
-        {/* IMPROVEMENT */}
-        <label>🎯 What do you want to improve?</label>
+      
+        <label> What do you want to improve?</label>
         <select name="improvement" onChange={handleChange}>
           <option value="">Select Option</option>
           <option>Math Marks</option>
@@ -88,8 +88,8 @@ function Setup() {
           <option>Exam Preparation</option>
         </select>
 
-        {/* HOBBY */}
-        <label>🎨 What do you like in free time?</label>
+    
+        <label> What do you like in free time?</label>
         <select name="hobby" onChange={handleChange}>
           <option value="">Select Hobby</option>
           <option>Drawing</option>

@@ -3,16 +3,26 @@ const Course = require("../models/Course");
 
 const router = express.Router();
 
-
+// Get courses (all or by class)
 router.get("/", async (req, res) => {
   try {
-    const courses = await Course.find();
+    const { class: className } = req.query;
+
+    let courses;
+
+    if (className) {
+      courses = await Course.find({ className });
+    } else {
+      courses = await Course.find();
+    }
+
     res.json(courses);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
+// Add course
 router.post("/", async (req, res) => {
   try {
     const course = await Course.create(req.body);

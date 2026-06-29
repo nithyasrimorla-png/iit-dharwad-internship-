@@ -1,16 +1,16 @@
 import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 import API from "../api";
 import "../App.css";
 
 function Signup() {
   const navigate = useNavigate();
-
-
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 const handleSignup = async () => {
-  const name = document.querySelectorAll(".auth-input")[0].value;
-  const email = document.querySelectorAll(".auth-input")[1].value;
-  const password = document.querySelectorAll(".auth-input")[2].value;
-
   try {
     await API.post("/auth/register", {
       name,
@@ -18,10 +18,16 @@ const handleSignup = async () => {
       password,
     });
 
-    alert("Signup successful 🚀");
-    navigate("/");
+    setMessage(" Account created successfully!");
+    setMessageType("success");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+
   } catch (err) {
-    alert(err.response?.data?.message || "Signup failed");
+    setMessage(err.response?.data?.message || "Signup failed");
+    setMessageType("error");
   }
 };
 
@@ -31,11 +37,34 @@ const handleSignup = async () => {
 
         <h1>Create Account</h1>
 
-        <input className="auth-input" placeholder="Full Name" />
-        <input className="auth-input" placeholder="Email" />
-        <input className="auth-input" placeholder="Password" type="password" />
+        <input
+        className="auth-input"
+        placeholder="Full Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-        <button className="auth-btn" onClick={handleSignup}>
+      <input
+        className="auth-input"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        className="auth-input"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+          {message && (
+            <div className={`auth-message ${messageType}`}>
+              {message}
+            </div>
+          )}
+
+          <button className="auth-btn" onClick={handleSignup}>
           Sign Up
         </button>
 
