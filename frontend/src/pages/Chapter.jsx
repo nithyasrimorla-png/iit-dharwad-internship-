@@ -204,7 +204,7 @@ const exercise = Math.min(exerciseCount * 10, 100);
 
     
       <div className="sidebar">
-        <h1 className="h1">Ebuddy.</h1>
+        <h1 className="h1">EBuddy.</h1>
 
         <ul>
           <li className="over" onClick={() => navigate("/dashboard")}>

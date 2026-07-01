@@ -44,15 +44,15 @@ const handleLogout = () => {
   navigate("/");
 };
 
-const filteredCourses = (courses || []).filter((course) =>
-  course?.title?.toLowerCase().includes(searchTerm.toLowerCase().trim())
+const filteredCourses = courses.filter((course) =>
+  course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
   return (
     <div className="dashboard">
 
       <div className="sidebar">
-        <h1 className="h1">Ebuddy.</h1>
+        <h1 className="h1">EBuddy.</h1>
         <ul>
           <li className="over" onClick={() => navigate("/dashboard")}>
             🏠Overview
@@ -79,21 +79,32 @@ const filteredCourses = (courses || []).filter((course) =>
       </div>
 
      <div className="main"> 
-    <input
-      type="text"
-      placeholder= "  🔍 Search anything..."
-      className="search-input"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
+<input
+  type="text"
+  placeholder="    🔍  Search anything..."
+  className="search-input"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+
 {searchTerm && (
   <div className="search-results">
     <h3>Search Results</h3>
 
     {filteredCourses.length > 0 ? (
       filteredCourses.map((course) => (
-        <div key={course._id} className="search-item">
-          <img src={course.image} alt="" width="40" />
+        <div
+          key={course._id}
+          className="search-item"
+          onClick={() => navigate(`/course/${course._id}`)}
+        >
+          <img
+            src={course.image}
+            alt={course.title}
+            width="40"
+            height="40"
+            style={{ objectFit: "cover", borderRadius: "6px" }}
+          />
           <span>{course.title}</span>
         </div>
       ))
@@ -102,7 +113,6 @@ const filteredCourses = (courses || []).filter((course) =>
     )}
   </div>
 )}
-
         <input placeholder="coding" className="code" />
         <input placeholder="Design" className="code" />
         <input placeholder="Marketing" className="code" />
