@@ -52,7 +52,7 @@ const filteredCourses = (courses || []).filter((course) =>
     <div className="dashboard">
 
       <div className="sidebar">
-        <h1 className="h1">Retro.</h1>
+        <h1 className="h1">Ebuddy.</h1>
         <ul>
           <li className="over" onClick={() => navigate("/dashboard")}>
             🏠Overview
@@ -107,7 +107,7 @@ const filteredCourses = (courses || []).filter((course) =>
         <input placeholder="Design" className="code" />
         <input placeholder="Marketing" className="code" />
         <input placeholder="Accounting" className="code" />
-<div className="search">
+<div>
   <h3>{selectedClass} Subjects</h3>
 
   <div className="container">
@@ -207,7 +207,7 @@ const filteredCourses = (courses || []).filter((course) =>
         </div>
     <div className="courses-list">
    <div className="course-card">
-  <img src="/images/Adobe.jpg" alt="Adobe" className="course-img" />
+  <img src="/images/Adobe.jpg" alt="Adobe" className="course-img"/>
    <div className="course-content"></div>
   <p>Adobe Illustrator Training</p>
   <div className="progress">
